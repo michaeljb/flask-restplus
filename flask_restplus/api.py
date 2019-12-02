@@ -488,22 +488,21 @@ class Api(object):
         '''
         return url_for(self.endpoint('root'), _external=False)
 
-    @cached_property
+    @property
     def __schema__(self):
         '''
         The Swagger specifications/schema for this API
 
         :returns dict: the schema as a serializable dict
         '''
-        if not self._schema:
-            try:
-                self._schema = Swagger(self).as_dict()
-            except Exception:
-                # Log the source exception for debugging purpose
-                # and return an error message
-                msg = 'Unable to render schema'
-                log.exception(msg)  # This will provide a full traceback
-                return {'error': msg}
+        try:
+            self._schema = Swagger(self).as_dict()
+        except Exception:
+            # Log the source exception for debugging purpose
+            # and return an error message
+            msg = 'Unable to render schema'
+            log.exception(msg)  # This will provide a full traceback
+            return {'error': msg}
         return self._schema
 
     @property
